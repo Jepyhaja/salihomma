@@ -18,7 +18,7 @@ class CreateExercisesTable extends Migration
             $table->mediumInteger('weight_grams');
             $table->unsignedInteger('work_sets');
             $table->unsignedInteger('repetitions');
-            $table->unsignedTinyInteger('RPE'); // 0-10
+            $table->unsignedTinyInteger('rpe'); // 0-10
             $table->integer('rest_period');
             $table->timestamps();
             $table->unsignedBigInteger('user_id')->nullable();
