@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVisitTable extends Migration
+class AddCardioOptionToExerciseDetails extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateVisitTable extends Migration
      */
     public function up()
     {
-        Schema::create('visit', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->dateTime('start_at');
-            $table->dateTime('end_at');
-            $table->timestamps();
+        Schema::table('exercise_details', function (Blueprint $table) {
+            $table->boolean('is_cardio');
         });
     }
 
@@ -28,6 +25,8 @@ class CreateVisitTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('visit');
+        Schema::table('exercise_details', function (Blueprint $table) {
+            $table->dropColumn('is_cardio');
+        });
     }
 }

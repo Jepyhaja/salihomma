@@ -16,12 +16,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
+
+Route::get('/home', function () {
+    return view('home');
+})->middleware('auth');
+
+Route::view('/workout', 'new-workout')->middleware('auth');
+
+Route::view('/workoutsummary', 'workout-summary')->middleware('auth');
+
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-Route::get('/list-exercises', 'ExerciseController@index');
-Route::post('/list-exercises', 'ExerciseController@store');
+// Show past workouts
+// Route::get('/workouts',)

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUserIdToVisit extends Migration
+class AddUserIdToWorkouts extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AddUserIdToVisit extends Migration
      */
     public function up()
     {
-        Schema::table('visit', function (Blueprint $table) {
+        Schema::table('workouts', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
@@ -26,8 +26,8 @@ class AddUserIdToVisit extends Migration
      */
     public function down()
     {
-        Schema::table('visit', function (Blueprint $table) {
-            $table->dropForeign('visit_user_id_foreign');
+        Schema::table('workouts', function (Blueprint $table) {
+            $table->dropForeign('workouts_user_id_foreign');
             $table->dropColumn('user_id');
         });
     }

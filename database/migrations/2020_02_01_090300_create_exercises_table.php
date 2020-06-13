@@ -19,8 +19,10 @@ class CreateExercisesTable extends Migration
             $table->unsignedInteger('work_sets');
             $table->unsignedInteger('repetitions');
             $table->unsignedTinyInteger('RPE'); // 0-10
-            $table->time('rest_period');
+            $table->integer('rest_period');
             $table->timestamps();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

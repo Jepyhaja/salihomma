@@ -40,6 +40,7 @@ class ExerciseController extends Controller
      */
     public function store(Request $request)
     {   
+        dd($request);
         $exercise = Exercise::create([
             'name' => $request->name, 
             'description' => $request['description'], 
