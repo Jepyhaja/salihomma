@@ -18,7 +18,6 @@ class CreateExerciseDetailsTable extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('media_url')->nullable();
-            $table->boolean('is_beginner_friendly');
             $table->timestamps();
         });
     }

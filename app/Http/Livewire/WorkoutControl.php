@@ -16,15 +16,25 @@ class WorkoutControl extends Component
 
     public function autocompleteData($term)
     {
+        if($this->exerciseDetail){
+            return null;
+        }
         if(strlen($term) < 1){
             return null;
         }
-        return ExerciseDetail::where('name','like',$term.'_%')->get()->pluck('name')->all();
+        return ExerciseDetail::where('name','like','%'.$term.'%')->get()->pluck('name')->all();
     }
+
+    // Computed Property
+    public function getExerciseDetailProperty()
+    {
+        return ExerciseDetail::where('name','like',$this->exercise_name ?? '')->first();
+    }
+
     public function updatingExerciseName($value)
     {
-        $this->exerciseName = $value;
-        $this->emit('ac_name', $this->autocompleteData($value));
+        $this->exercise_name = $value;
+        return $this->emit('ac_name', $this->autocompleteData($value));
     }
     public function updateExerciseName($value)
     {

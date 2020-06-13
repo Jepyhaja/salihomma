@@ -18,7 +18,6 @@ class ExerciseDetailSeeder extends Seeder
                 'name' => Str::random(10),
                 'description' => Str::random(55),
                 'media_url' => 'https://'.Str::random(10).'.com',
-                'is_beginner_friendly' => rand(0,1),
                 'is_cardio' => rand(0,1),
             ]);
         }
