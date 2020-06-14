@@ -14,10 +14,19 @@ class WorkoutControl extends Component
     public $rpe;
     public $rest_period;
     public $cardio_duration;
+    public $is_cardio;
+    public $exercise_detail_id;
+    /* public $media_url;
+    public $description; */
+
 
     public function mount( $exercise_name = null) 
     {
         $this->exercise_name = $exercise_name;
+        $this->exercise_detail_id = null;
+        $this->is_cardio = false;
+        /* $this->media_url = null;
+        $this->description = null; */
     }
 
     public function autocompleteData($term)
@@ -26,6 +35,10 @@ class WorkoutControl extends Component
             return null;
         }
         if (strlen($term) < 1) {
+            $this->exercise_detail_id = null;
+            $this->is_cardio = false;
+            /* $this->media_url = null;
+            $this->description = null; */
             return null;
         }
         return ExerciseDetail::where('name', 'like', '%' . $term . '%')->get()->pluck('name')->all();
@@ -40,7 +53,13 @@ class WorkoutControl extends Component
     public function updatingExerciseName($value)
     {
         $this->exercise_name = $value;
-        return $this->emit('ac_name', $this->autocompleteData($value));
+        $this->emit('ac_name', $this->autocompleteData($value));
+        if($this->exerciseDetail){
+            $this->exercise_detail_id = $this->exerciseDetail->id;
+            $this->is_cardio = $this->exerciseDetail->is_cardio;
+            /* $this->media_url = $this->exerciseDetail->media_url;
+            $this->description = $this->exerciseDetail->description; */
+        }
     }
 
     public function updating($name, $value)
@@ -53,38 +72,38 @@ class WorkoutControl extends Component
     }
 
     public function storeExercise()
-    {
+    {   
         $this->validate(
             [
-            'weight'            => 'required|numeric|min:1',
-            'working_sets'      => 'required|numeric|min:1',
-            'repetitions'       => 'required|numeric|min:0',
+            'weight'            => 'exclude_if:is_cardio,true|required|numeric',
+            'working_sets'      => 'required|numeric',
+            'repetitions'       => 'exclude_if:is_cardio,true|required|numeric',
             'rpe'               => 'required|numeric|min:0|max:10',
-            'rest_period'       => 'numeric|min:1',
-            'cardio_duration'   => 'numeric|min:1',
+            'rest_period'       => 'numeric',
+            'is_cardio'         => 'required|bool',
+            'cardio_duration'   => 'exclude_if:is_cardio,false|numeric',
+            /* 'media_url'         => 'string',
+            'description'       => 'string|max:70', */
+            'exercise_name'     => 'required|string|max:40',
             ]
         );
-        dd($this);
-        
+
+        // check if it's a new exercise
+        if(!$this->exercise_detail_id){
+            $exercise_detail = ExerciseDetail::create([
+             'name' => $this->exercise_name,
+             /* 'description' => $this->description,
+             'media_url' => $this->media_url, */
+             'is_cardio' => $this->is_cardio,
+            ]);
+            $exercise_detail->save();
+         }
+
     }
 
     public function render()
     {
         return view('livewire.workout-control');
-    }
-
-    private function rules()
-    {   
-        /* 'freeform' => 'sometimes|string|required', */
-        $rules = [
-            'weight'            => 'required|number|min:1',
-            'working_sets'      => 'required|number|min:1',
-            'repetitions'       => 'required|number|min:0',
-            'rpe'               => 'required|number|min:0|max:10',
-            'rest_period'       => 'number|min:1',
-            'cardio_duration'   => 'number|min:1',
-        ];
-        return $rules;
     }
             
 }
